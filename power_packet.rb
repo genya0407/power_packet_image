@@ -74,7 +74,7 @@ def line_with_packet_absolute(ctx, colors, start, sink, height)
 end
 
 SOURCE_WIDTH_RATIO = 1.5
-def source(ctx, color, start, height)
+def source_or_consumer(ctx, color, start, height)
     width = height * SOURCE_WIDTH_RATIO
     ctx.save do
         ctx.set_source_rgb(color.r, color.g, color.b)
@@ -87,10 +87,32 @@ def source(ctx, color, start, height)
         ctx.rectangle(start.x - width/2, start.y - height/2, width, height)
         ctx.stroke
     end
+
+    yield
+end
+
+def source(ctx, color, start, height)
+    source_or_consumer(ctx, color, start, height) do
+        ctx.save do
+            fp = start.up(height).left(height * SOURCE_WIDTH_RATIO).up(10).left(20)
+            ctx.move_to(fp.x, fp.y)
+            ctx.set_source_rgb(0,0,0)
+            ctx.set_font_size(20)
+            ctx.show_text("Source".encode('utf-8'))
+        end
+    end
 end
 
 def consumer(ctx, color, start, height)
-    source(ctx, color, start, height)
+    source_or_consumer(ctx, color, start, height) do
+        ctx.save do
+            fp = start.up(height).left(height * SOURCE_WIDTH_RATIO).up(10)#.left(40)
+            ctx.move_to(fp.x, fp.y)
+            ctx.set_source_rgb(0,0,0)
+            ctx.set_font_size(20)
+            ctx.show_text("Load".encode('utf-8'))
+        end
+    end
 end
 
 def router(ctx, start, height)
@@ -123,13 +145,22 @@ width = 500
 height = 300
 
 format = Cairo::FORMAT_ARGB32
-surface = Cairo::ImageSurface.new(format, width, height)
+surface = Cairo::ImageSurface.new(format, width, height + 50)
 ctx = Cairo::Context.new(surface)
 
 ctx.fill do
     ctx.set_source_rgb(1,1,1)
-    ctx.rectangle(0.0, 0.0, width,height) # background
+    ctx.rectangle(0.0, 0.0, width, height + 50) # background
 end
+
+ctx.save do
+    ctx.set_source_rgb(0,0,0)
+    ctx.move_to(width/5*2 - 30, 40)
+    ctx.set_font_size(20)
+    ctx.show_text("Router network")
+end
+
+ctx.translate(0, 50)
 
 s1 = Point.new(50, height/10*2)
 s2 = Point.new(50, height/10*8)
@@ -176,11 +207,11 @@ ctx.save do
 
     pt1 = power_line_end
     router(ctx, pt1, node_height)
-    pt2 = Point.new(pt1.x + width/10*1.5, pt1.y - height/5)
+    pt2 = Point.new(pt1.x + width/10*1.5, pt1.y - height/5).left(20)
     router(ctx, pt2, node_height)
-    pt3 = Point.new(pt1.x + width/10 * 2, pt1.y + height/5)
+    pt3 = Point.new(pt1.x + width/10 * 2, pt1.y + height/5).left(20)
     router(ctx, pt3, node_height)
-    pt4 = Point.new(pt2.x + width/10*2, pt2.y)
+    pt4 = Point.new(pt2.x + width/10*2, pt2.y).left(20)
     router(ctx, pt4, node_height)
 
     line_with_packet_absolute(
