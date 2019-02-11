@@ -137,8 +137,8 @@ Point = Struct.new(:x, :y) do
 end
 Color = Struct.new(:r, :g, :b)
 
-packet_color1 = Color.new(0.5, 0  , 0)
-packet_color2 = Color.new(0  , 0.5, 0)
+packet_color1 = Color.new(0.2578125, 0.5234375, 0.953125)
+packet_color2 = Color.new(0.953125, 0.27734375, 0.25390625)
 packet_height = 10
 node_height = 30
 width = 500
