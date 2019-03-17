@@ -71,17 +71,17 @@ phs.each.with_index do |ph, pict_number|
         line_end_point = ctx.current_point
     end
 
-    # ctx.save do
-    #     ctx.translate(width/2, height/2)
+    ctx.save do
+        ctx.translate(width/2, height/2)
 
-    #     ctx.save do
-    #         ctx.stroke do
-    #             ctx.set_source_rgb(0,0,0)
-    #             ctx.arc(0, 0, height * 0.9 / 2, 0, 2*Math::PI)
-    #             ctx.set_dash([5.0, 5.0])
-    #         end
-    #     end
-    # end
+        ctx.save do
+            ctx.stroke do
+                ctx.set_source_rgb(0,0,0)
+                ctx.arc(0, 0, height * 0.9 / 2, 0, 2*Math::PI)
+                ctx.set_dash([5.0, 5.0])
+            end
+        end
+    end
 
     ctx.save do
         power_line_end = Point.new(line_end_point[0] + node_height/2, height/2)
